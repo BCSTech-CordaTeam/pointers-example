@@ -44,13 +44,19 @@ So in one of the order contract test cases, it is checked to prove that the prod
 
 
 It also shows how to resolve the static pointer to get the Product State at both the parties. 
-If we try to resolve the static pointer at Junko it will fail with TransactionResolutionException as Junko's vault hasn't seen the product transaction.[Refer here](https://github.com/BCSTech-CordaTeam/pointers-example/blob/6f759ef14e74447f76ac7979f420cbea42b465d8/contracts/src/test/kotlin/com/pointers/example/contracts/OrderContractTests.kt#L162)
+If we try to resolve the static pointer at Junko it will fail with TransactionResolutionException as Junko's vault hasn't seen the product transaction.
+
+[Reference](https://github.com/BCSTech-CordaTeam/pointers-example/blob/6f759ef14e74447f76ac7979f420cbea42b465d8/contracts/src/test/kotlin/com/pointers/example/contracts/OrderContractTests.kt#L162)
+
+
 The static pointer has to be resolved to a transaction using conan's ledger services and that transaction should be recorded in junko's ledger. 
-After recording the transaction at junko's ledger, we can resolve the pointer at Junko side. [Refer here](https://github.com/BCSTech-CordaTeam/pointers-example/blob/6f759ef14e74447f76ac7979f420cbea42b465d8/contracts/src/test/kotlin/com/pointers/example/contracts/OrderContractTests.kt#L201)
+After recording the transaction at junko's ledger, we can resolve the pointer at Junko side. 
+
+[Reference](https://github.com/BCSTech-CordaTeam/pointers-example/blob/6f759ef14e74447f76ac7979f420cbea42b465d8/contracts/src/test/kotlin/com/pointers/example/contracts/OrderContractTests.kt#L201)
 
 A static pointer can be resolved to a State and StateAndRef like  
 
-1. [State](https://github.com/BCSTech-CordaTeam/pointers-example/blob/6f759ef14e74447f76ac7979f420cbea42b465d8/contracts/src/test/kotlin/com/pointers/example/contracts/OrderContractTests.kt#L196)  ```productPointer.resolve(junkoLedgerServices!!).state.data ```
+1. [State](https://github.com/BCSTech-CordaTeam/pointers-example/blob/6f759ef14e74447f76ac7979f420cbea42b465d8/contracts/src/test/kotlin/com/pointers/example/contracts/OrderContractTests.kt#L196)  ```productPointer.resolve(junkoLedgerServices).state.data ```
 
-2. [StateAndRef](https://github.com/BCSTech-CordaTeam/pointers-example/blob/6f759ef14e74447f76ac7979f420cbea42b465d8/contracts/src/test/kotlin/com/pointers/example/contracts/OrderContractTests.kt#L96)  ```productPointer.resolve(conanLedgerServices!!).referenced().stateAndRef ```
+2. [StateAndRef](https://github.com/BCSTech-CordaTeam/pointers-example/blob/6f759ef14e74447f76ac7979f420cbea42b465d8/contracts/src/test/kotlin/com/pointers/example/contracts/OrderContractTests.kt#L96)  ```productPointer.resolve(conanLedgerServices).referenced().stateAndRef ```
 
