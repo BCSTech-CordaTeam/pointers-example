@@ -35,7 +35,7 @@ class DriverBasedTest {
     ) { test() }
 
     // Makes an RPC call to retrieve another node's name from the network map.
-    private fun NodeHandle.resolveName(name: CordaX500Name) = rpc.wellKnownPartyFromX500Name(name)!!.name
+    private fun NodeHandle.resolveName(name: CordaX500Name) = rpc.wellKnownPartyFromX500Name(name).name
 
     // Resolves a list of futures to a list of the promised values.
     private fun <T> List<Future<T>>.waitForAll(): List<T> = map { it.getOrThrow() }

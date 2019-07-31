@@ -32,6 +32,7 @@ class ProductContract : Contract {
             }
         }
     }
+    
     private fun verifyCreate(tx: LedgerTransaction, signers: Set<PublicKey>) = requireThat {
         "No inputs should be consumed when creating a product." using (tx.inputs.isEmpty())
         "Only one output state should be created." using (tx.outputs.size == 1)
@@ -45,11 +46,13 @@ class ProductContract : Contract {
     }
     
     private fun verifyUpdatePrice(tx: LedgerTransaction, signers: Set<PublicKey>) = requireThat {
-        "Only one input should be consumed when updating a product." using (tx.inputs.size == 1)
-        "Only one output state should be created." using (tx.outputs.size == 1)
         val input = tx.inputsOfType<Product>().single()
         val output = tx.outputsOfType<Product>().single()
+        
+        "Only one input should be consumed when updating product price." using (tx.inputs.size == 1)
+        "Only one output state should be created." using (tx.outputs.size == 1)
         "All of the participants must be signers." using (signers.containsAll(output.participants.map { it.owningKey }))
+        
         // Product Specific constraints.
         "Product's value must be non-negative." using (output.price > 0)
         "Product's price in the input and output shouldn't be the same." using (input.price != output.price)

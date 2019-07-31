@@ -14,11 +14,11 @@ class ProductContractTests: ContractTestsUtil() {
 						listOf(conan.publicKey),
 						ProductContract.Commands.Create()
 				)
-				output(ProductContract.ID, devilFruit)
+				output(ProductContract.ID, bike)
 				this `fails with` "No inputs should be consumed when creating a product."
 			}
 			transaction {
-				output(ProductContract.ID, devilFruit)
+				output(ProductContract.ID, bike)
 				command(listOf(conan.publicKey), ProductContract.Commands.Create())
 				verifies() // As there are no input states.
 			}
@@ -33,13 +33,13 @@ class ProductContractTests: ContractTestsUtil() {
 						listOf(conan.publicKey),
 						ProductContract.Commands.Create()
 				)
-				output(ProductContract.ID, devilFruit) // Two outputs fails.
-				output(ProductContract.ID, devilFruit)
+				output(ProductContract.ID, bike) // Two outputs fails.
+				output(ProductContract.ID, bike)
 				this `fails with` "Only one output state should be created."
 			}
 			transaction {
 				command(listOf(conan.publicKey), ProductContract.Commands.Create())
-				output(ProductContract.ID, devilFruit) // One output passes.
+				output(ProductContract.ID, bike) // One output passes.
 				verifies()
 			}
 		}
@@ -74,18 +74,27 @@ class ProductContractTests: ContractTestsUtil() {
 			}
 			transaction {
 				command(listOf(conan.publicKey), ProductContract.Commands.Create())
-				output(ProductContract.ID, devilFruit) // One output passes.
+				output(ProductContract.ID, bike) // One output passes.
 				verifies()
 			}
 		}
 	}
 	
 	@Test
-	fun `Update product transaction must have one input`() {
+	fun `Update product price transaction must have one input`() {
 		ledgerServices.ledger {
 			transaction {
-				input(ProductContract.ID, devilFruit)
-				output(ProductContract.ID, devilFruitUpdated)
+				input(ProductContract.ID, bike)
+				input(ProductContract.ID, bike)
+				output(ProductContract.ID, bikeUpdated)
+				command(listOf(conan.publicKey), ProductContract.Commands.UpdatePrice())
+				this `fails with` "Only one input should be consumed when updating product price."
+			}
+		}
+		ledgerServices.ledger {
+			transaction {
+				input(ProductContract.ID, bike)
+				output(ProductContract.ID, bikeUpdated)
 				command(listOf(conan.publicKey), ProductContract.Commands.UpdatePrice())
 				verifies()
 			}
@@ -93,35 +102,35 @@ class ProductContractTests: ContractTestsUtil() {
 	}
 	
 	@Test
-	fun `Update product price transaction with different name, company and negative price`() {
+	fun `Update product price transaction with different name, company, negative and same price`() {
 		ledgerServices.ledger {
 			transaction {
-				input(ProductContract.ID, devilFruit)
-				output(ProductContract.ID, devilFruitUpdatedWithDiffName)
+				input(ProductContract.ID, bike)
+				output(ProductContract.ID, bikeUpdatedWithDiffName)
 				command(listOf(conan.publicKey), ProductContract.Commands.UpdatePrice())
 				this `fails with` "Product's name must be the same in input and output."
 			}
 			transaction {
-				input(ProductContract.ID, devilFruit)
-				output(ProductContract.ID, devilFruitUpdatedWithDiffCompany)
+				input(ProductContract.ID, bike)
+				output(ProductContract.ID, bikeUpdatedWithDiffCompany)
 				command(listOf(conan.publicKey), ProductContract.Commands.UpdatePrice())
 				this `fails with` "Product's company must be the same in input and output."
 			}
 			transaction {
-				input(ProductContract.ID, devilFruit)
-				output(ProductContract.ID, devilFruitUpdatedWithNegValue)
+				input(ProductContract.ID, bike)
+				output(ProductContract.ID, bikeUpdatedWithNegValue)
 				command(listOf(conan.publicKey), ProductContract.Commands.UpdatePrice())
 				this `fails with` "Product's value must be non-negative."
 			}
 			transaction {
-				input(ProductContract.ID, devilFruit)
-				output(ProductContract.ID, devilFruitUpdatedWithSamePrice)
+				input(ProductContract.ID, bike)
+				output(ProductContract.ID, bikeUpdatedWithSamePrice)
 				command(listOf(conan.publicKey), ProductContract.Commands.UpdatePrice())
 				this `fails with` "Product's price in the input and output shouldn't be the same."
 			}
 			transaction {
-				input(ProductContract.ID, devilFruit)
-				output(ProductContract.ID, devilFruitUpdated)
+				input(ProductContract.ID, bike)
+				output(ProductContract.ID, bikeUpdated)
 				command(listOf(conan.publicKey), ProductContract.Commands.UpdatePrice())
 				verifies()
 			}
