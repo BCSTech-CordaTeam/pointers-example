@@ -35,4 +35,18 @@ A StatePointer contains a pointer to a ContractState. The StatePointer can be in
 There are two types of pointers; linear and static.The focus of this example is to demonstrate static pointers. StaticPointer s are for use with any type of ContractState. The StaticPointer does as it suggests, it always points to the same ContractState.
 As the pointers are associated with states, this example contains only states and unit test cases to try and understand the usage of the static pointer.
 
-There are two states in this example: Product and Order. Product State is then added as a static pointer to the order state.
+There are two states in this example: Product and Order. Product State is added as a static pointer to the order state. Two parties Conan & Junko and a notary are used to demonstrate this example. 
+Product consists of name, company and price. Product contract consists of two commands: Create and UpdatePrice. Order contract consists of Create command.
+Conan creates the product and then later creates the order with Junko. Then Conan goes and updates the price of the product. 
+So in one of the test cases, it is checked to prove that the product added to the order is not affected by the price update which demonstrates that static pointer always points to the same state.  
+
+
+It also shows how to resolve the static pointer to get the Product State at both the parties. 
+If we try to resolve the static pointer at Junko it will fail with TransactionResolution exception as Junko's vault hasn't seen the product transaction.
+The static pointer has to be resolved to a transaction using conan's ledger services and that transaction should be recorded in junko's ledger. 
+After recording the transaction at junko's ledger, we can resolve the pointer at Junko side.
+
+A static pointer can be resolved to a State and StateAndRef like
+1. productPointer.resolve(junkoLedgerServices!!).state.data >>> State
+2. productPointer.resolve(conanLedgerServices!!).referenced().stateAndRef >>> StateAndRef
+
